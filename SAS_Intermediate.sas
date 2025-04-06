@@ -2,13 +2,14 @@
 1. Handling missing values	(IF ... THEN, PROC MEANS, PROC FREQ)
 2. Removing duplicates	(PROC SORT NODUPKEY/NODUP)
 3. Handling outliers (PROC UNIVARIATE, IF conditions)
-4. Standardizing data (UPCASE, PROPCASE, PROPCASE)
+4. Standardizing data (UPCASE, LOWCASE, PROPCASE)
 5. PROC FORMAT for data labeling
 6. Data Aggregation & Summarization:
 		PROC MEANS/ PROC SUMMARY for descriptive statistics
 		PROC FREQ for frequency tables
 		PROC UNIVARIATE for distribution analysis
-7. Merging Dataset
+7. Rank and Dense Rank Dataset using proc rank
+8. Merging Dataset
 */
 
 
@@ -334,6 +335,31 @@ ODS SELECT Moments;
 PROC UNIVARIATE DATA=students;
     VAR Marks;
 RUN;
+
+
+
+/* rank and dense rank using proc rank */
+proc sort data=students_cleaned;
+    by subject descending marks;
+run;
+
+/* rank */
+proc rank data=students_cleaned out=ranked_marks ties=low;
+    var marks;
+    ranks spend_rank;
+run;
+
+/* dense rank */
+proc rank data=students_cleaned out=dense_ranked_marks ties=dense;
+    var marks;
+    ranks spend_dense_rank;
+run;
+
+proc rank data=students_cleaned out=dense_ranked_marks ties=dense;
+	by subject;
+    var marks;
+    ranks spend_dense_rank;
+run;
 
 
 
