@@ -11,7 +11,13 @@
 10. Case When for conditional column logic
 11. LIKE - Pattern Rceognization
 12. Joins (Inner, Left, Right, Full including exclusives)
-13. Real world application
+13. String Functions
+		Concatenation using pipeline and catx()
+		REVERSE – Reverse a string
+		REPLACE – Replace part of string (use TRANWRD() in SAS)
+		SUBSTRING – Extract part of a string 
+		INSTRING – Position of substring (INDEX() in SAS)
+14. Real world applications
 */
 
 
@@ -237,6 +243,51 @@ proc sql;
     full join credit_usage as b
     on a.customer_id = b.customer_id
     where a.customer_id is null or b.customer_id is null;
+quit;
+
+
+
+/* Concatenation */
+/* Use pipeline || */
+proc sql;
+    select customer_id, name, 
+           name || ' (' || customer_id || ')' as full_label
+    from customers;
+quit;
+
+/* Use CATX() */
+proc sql;
+    select customer_id, name,
+           catx(' - ', name, customer_id) as full_label
+    from customers;
+quit;
+
+
+/* REVERSE – Reverse a string */
+proc sql;
+    select name, reverse(name) as reversed_name
+    from customers;
+quit;
+
+
+/* REPLACE – Replace part of string (use TRANWRD() in SAS) */
+proc sql;
+    select name, tranwrd(name, 'a', '@') as modified_name
+    from customers;
+quit;
+
+
+/* SUBSTRING – Extract part of a string */
+proc sql;
+    select name, substr(name, 1, 3) as name_prefix, substr(name, 4) as name_suffix
+    from customers;
+quit;
+
+
+/* INSTRING – Position of substring (INDEX() in SAS) */
+proc sql;
+    select lowcase(name), index(lowcase(name), 'a') as position_of_a
+    from customers;
 quit;
 
 
